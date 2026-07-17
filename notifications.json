@@ -1,0 +1,12 @@
+[
+  {
+    "id": "feriado-horario-especial",
+    "title": "Feriado nesta sexta-feira",
+    "message": "Atenção, alunos! Nesta sexta-feira a academia funcionará em horário especial, das 6h às 12h.",
+    "date": "2026-07-17",
+    "audience": "Todos os alunos",
+    "priority": "Importante",
+    "image": "notification-holiday.png",
+    "createdAt": "2026-07-15T12:00:00.000Z"
+  }
+]

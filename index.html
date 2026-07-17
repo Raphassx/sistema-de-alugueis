@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RR Academia - gerenciamento inteligente para academias">
+  <title>RR Academia | Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="notifications.css">
+</head>
+<body>
+  <div id="app">
+    <section id="splash" class="screen splash active" aria-label="Carregando FitCore">
+      <div class="splash-glow"></div>
+      <img class="brand-logo brand-logo--large" src="logo-rr.png" alt="Logo RR Academia">
+      <div class="brand-name">RR <span>ACADEMIA</span></div>
+      <p>FORÇA • FOCO • RESULTADO</p>
+      <div class="loader"><span></span></div>
+    </section>
+
+    <section id="login" class="screen auth-screen" aria-label="Login">
+      <div class="auth-art">
+        <div class="auth-brand">
+          <img class="brand-logo" src="logo-rr.png" alt="Logo RR Academia">
+          <div class="brand-name">RR <span>ACADEMIA</span></div>
+        </div>
+        <div class="art-copy">
+          <span class="eyebrow">GESTÃO QUE IMPULSIONA</span>
+          <h1>Mais controle.<br><em>Mais resultados.</em></h1>
+          <p>Tudo o que sua academia precisa para crescer, em um só lugar.</p>
+        </div>
+        <div class="art-stat"><strong>+32%</strong><span>de eficiência na gestão</span></div>
+      </div>
+      <main class="auth-panel">
+        <div class="mobile-brand"><img class="brand-logo" src="logo-rr.png" alt="Logo RR Academia"><div class="brand-name">RR <span>ACADEMIA</span></div></div>
+        <div class="form-wrap">
+          <span class="eyebrow dark">ACESSO ADMINISTRATIVO</span>
+          <h2>Bem-vindo de volta</h2>
+          <p class="form-intro">Entre com suas credenciais para continuar.</p>
+          <form id="login-form" novalidate>
+            <div class="login-type" role="group" aria-label="Tipo de acesso"><button type="button" class="active" data-login-type="admin">Administrador</button><button type="button" data-login-type="employee">Funcionário</button></div>
+            <label for="email">E-mail</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 7l8 6 8-6"/></svg>
+              <input id="email" type="email" placeholder="seu@email.com" autocomplete="email" required>
+            </div>
+            <div class="label-row"><label for="password">Senha</label><button type="button" class="text-button" id="forgot-button">Esqueceu a senha?</button></div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+              <input id="password" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+              <button class="icon-button" id="toggle-password" type="button" aria-label="Mostrar senha"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
+            </div>
+            <p id="login-error" class="error-message" role="alert"></p>
+            <button class="primary-button" type="submit">Entrar <span>→</span></button>
+          </form>
+        </div>
+        <p class="copyright">© 2026 RR Academia. Todos os direitos reservados.</p>
+      </main>
+    </section>
+
+    <section id="welcome" class="screen welcome-screen" aria-label="Boas-vindas">
+      <div class="welcome-card">
+        <div class="success-icon">✓</div>
+        <span class="eyebrow dark">LOGIN REALIZADO COM SUCESSO</span>
+        <h2>Bem-vindo, <em>Administrador!</em></h2>
+        <p>É ótimo ter você de volta. Sua academia está pronta para mais um dia de resultados.</p>
+        <div class="welcome-summary"><div><span>Hoje</span><strong>15 de julho</strong></div><div><span>Status</span><strong class="online">● Tudo operando</strong></div></div>
+        <button id="continue-button" class="primary-button">Ir para o painel <span>→</span></button>
+      </div>
+    </section>
+
+    <section id="dashboard" class="screen dashboard-screen" aria-label="Painel administrativo">
+      <aside class="sidebar">
+        <div class="sidebar-brand"><img class="brand-logo" src="logo-rr.png" alt="Logo RR Academia"><div class="brand-name">RR <span>ACADEMIA</span></div></div>
+        <nav aria-label="Menu principal">
+          <span class="nav-title">GESTÃO</span>
+          <button class="nav-item active" data-view="overview"><span>⌂</span> Visão geral</button>
+          <button class="nav-item" data-view="students"><span>♙</span> Alunos <b id="student-count">0</b></button>
+          <button class="nav-item" data-view="plans"><span>▣</span> Nossos planos</button>
+          <button class="nav-item" data-view="agenda"><span>▦</span> Agenda</button>
+          <button class="nav-item employee-only" data-view="timeclock" hidden><span>◷</span> Ponto</button>
+          <button class="nav-item" data-view="notifications"><span>●</span> Notificações <i id="notification-count">1</i></button>
+          <button class="nav-item admin-only" data-view="employees"><span>♟</span> Funcionários <b id="employee-count">0</b></button>
+          <span class="nav-title admin-only">FINANCEIRO</span>
+          <button class="nav-item admin-only" data-view="finance"><span>◈</span> Financeiro</button>
+          <button class="nav-item admin-only" data-view="payments"><span>◎</span> Mensalidades <i id="pending-count">0</i></button>
+          <span class="nav-title admin-only">CONFIGURAÇÕES</span>
+          <button class="nav-item admin-only" data-view="settings"><span>⚙</span> Configurações</button>
+          <button class="nav-item admin-only" data-view="logout"><span>↪</span> Sair</button>
+          <button class="nav-item employee-only" data-view="logout" hidden><span>↪</span> Sair</button>
+        </nav>
+        <div class="sidebar-user"><div class="avatar">AD</div><div><strong>Administrador</strong><span>admin@fitcore.com</span></div><button id="logout-button" title="Sair">↪</button></div>
+      </aside>
+      <main class="dashboard-main">
+        <header class="topbar"><button id="menu-button" class="menu-button" aria-label="Abrir menu">☰</button><div class="search"><button id="global-search-button" type="button" aria-label="Buscar aluno">⌕</button><input id="global-search-input" placeholder="Buscar aluno por nome, CPF, e-mail ou telefone" aria-label="Buscar aluno"></div><div class="top-actions"><button id="top-notifications" aria-label="Abrir notificações">●<i></i></button><span>Terça, 15 Jul 2026</span><button id="employee-profile-button" class="employee-profile-button employee-only" hidden aria-label="Abrir perfil"><span id="profile-avatar">FU</span></button></div></header>
+        <div class="dashboard-content" id="dashboard-content">
+          <div class="page-heading"><div><span class="eyebrow dark">VISÃO GERAL</span><h1>Bom dia, Administrador! 👋</h1><p>Acompanhe os principais números da sua academia.</p></div><button class="outline-button">↧ Exportar relatório</button></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-icon mint">♙</div><span>ALUNOS ATIVOS</span><strong>1.248</strong><p class="up">↑ 8,2% <small>vs. mês anterior</small></p><div class="spark mint-line">▁▂▂▃▅▄▆█</div></article>
+            <article class="stat-card"><div class="stat-icon blue">$</div><span>RECEITA MENSAL</span><strong>R$ 86.420</strong><p class="up">↑ 12,5% <small>vs. mês anterior</small></p><div class="spark blue-line">▁▃▂▄▃▅▆█</div></article>
+            <article class="stat-card"><div class="stat-icon orange">!</div><span>MENSALIDADES PENDENTES</span><strong>12</strong><p class="down">↓ 3,1% <small>vs. mês anterior</small></p><div class="spark orange-line">█▆▇▅▄▅▃▂</div></article>
+            <article class="stat-card"><div class="stat-icon purple">▣</div><span>CHECK-INS HOJE</span><strong>186</strong><p class="up">↑ 6,4% <small>vs. ontem</small></p><div class="spark purple-line">▂▁▃▂▄▆▅█</div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel chart-panel"><div class="panel-header"><div><h3>Fluxo de alunos</h3><p>Check-ins nos últimos 7 dias</p></div><button>Últimos 7 dias⌄</button></div><div class="chart-wrap"><div class="y-axis"><span>300</span><span>200</span><span>100</span><span>0</span></div><div class="bars"><div><b style="--h:55%"></b><span>SEG</span></div><div><b style="--h:70%"></b><span>TER</span></div><div><b style="--h:62%"></b><span>QUA</span></div><div><b style="--h:82%"></b><span>QUI</span></div><div><b style="--h:72%"></b><span>SEX</span></div><div><b style="--h:92%"></b><span>SÁB</span></div><div><b style="--h:42%"></b><span>DOM</span></div></div></div></article>
+            <article class="panel plans-panel"><div class="panel-header"><div><h3>Planos mais populares</h3><p>Distribuição dos alunos</p></div><button>•••</button></div><div class="donut-row"><div class="donut"><div><strong>1.248</strong><span>alunos</span></div></div><ul><li><i class="dot green"></i><span>Plano Anual</span><strong>52%</strong></li><li><i class="dot blue-dot"></i><span>Plano Semestral</span><strong>28%</strong></li><li><i class="dot purple-dot"></i><span>Plano Mensal</span><strong>20%</strong></li></ul></div></article>
+          </div>
+          <article class="panel activity-panel"><div class="panel-header"><div><h3>Atividades recentes</h3><p>Últimas movimentações da academia</p></div><button>Ver todas →</button></div><div class="activity-list"><div><span class="activity-icon mint">✓</span><p><strong>Novo check-in</strong><small>Mariana Costa • Musculação</small></p><time>Agora</time></div><div><span class="activity-icon blue">＋</span><p><strong>Novo aluno cadastrado</strong><small>Rafael Mendes • Plano Anual</small></p><time>12 min</time></div><div><span class="activity-icon orange">$</span><p><strong>Pagamento recebido</strong><small>Carla Souza • R$ 129,90</small></p><time>28 min</time></div></div></article>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <dialog id="forgot-modal">
+    <button class="modal-close" id="modal-close" aria-label="Fechar">×</button>
+    <div id="forgot-step">
+      <div class="modal-icon">✉</div><span class="eyebrow dark">RECUPERAR ACESSO</span><h2>Esqueceu sua senha?</h2><p>Informe o e-mail cadastrado. Enviaremos um código de verificação para você.</p>
+      <form id="forgot-form"><label for="recovery-email">E-mail cadastrado</label><div class="input-wrap"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 7l8 6 8-6"/></svg><input id="recovery-email" type="email" placeholder="seu@email.com" required></div><button class="primary-button" type="submit">Enviar código <span>→</span></button></form>
+    </div>
+    <div id="sent-step" hidden><div class="success-icon small">✓</div><h2>Código enviado!</h2><p>Enviamos um código de 6 dígitos para <strong id="sent-email"></strong>.</p><button id="back-login" class="primary-button">Voltar para o login</button></div>
+  </dialog>
+  <dialog id="system-modal" class="system-modal"></dialog>
+  <div id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
