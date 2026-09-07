@@ -4,7 +4,7 @@ const systemModal = document.querySelector('#system-modal');
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const dateFmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 const plans = [
-  { id: 'mensal', name: 'Plano Mensal', months: 1, price: 129.90, color: '#e51c23' },
+  { id: 'mensal', name: 'Plano Mensal', months: 1, price: 129.90, color: '#ff7900' },
   { id: 'trimestral', name: 'Plano Trimestral', months: 3, price: 349.90, color: '#777a7e' },
   { id: 'anual', name: 'Plano Anual', months: 12, price: 1199.90, color: '#242426' }
 ];
@@ -55,7 +55,7 @@ function seedData() {
       { id: crypto.randomUUID(), name: 'Carla Souza', cpf: '345.678.901-32', email: 'carla@email.com', phone: '(11) 97777-8303', birth: '1999-12-11', weight: '', height: '', plan: 'mensal', payment: 'Dinheiro', start: today, end: addMonths(today, 1), active: true }
     ],
     transactions: [],
-    settings: { academy: 'RR Academia', document: '', phone: '', email: '', address: '', notifications: true }
+    settings: { academy: 'Academia Shape Combat', document: '', phone: '', email: '', address: '', notifications: true }
   };
   sample.transactions = sample.students.map((student, index) => ({ id: crypto.randomUUID(), studentId: student.id, description: `Mensalidade • ${student.name}`, amount: plans.find(plan => plan.id === student.plan).price, date: new Date(Date.now() - index * 86400000 * 5).toISOString().slice(0, 10), method: student.payment, status: 'Recebido' }));
   localStorage.setItem('rr-academia-data', JSON.stringify(sample));
@@ -63,6 +63,8 @@ function seedData() {
 }
 
 let data = seedData();
+// Atualiza instalações que já tenham dados salvos no navegador.
+if (data.settings?.academy === 'RR Academia') data.settings.academy = 'Academia Shape Combat';
 if (!data.students.some(student => student.email === 'lucas.atrasado@exemplo.com')) {
   const start = isoToday();
   const overdueStudent = { id: crypto.randomUUID(), name: 'Lucas Oliveira', cpf: '456.789.012-43', email: 'lucas.atrasado@exemplo.com', phone: '(11) 98888-7766', birth: '1992-04-10', weight: '', height: '', plan: 'mensal', payment: 'PIX', start, end: addMonths(start, 1), active: true };
@@ -130,7 +132,7 @@ if (!data.notifications) {
 }
 let currentView = 'overview';
 let loginType = 'admin';
-let currentUser = { type: 'admin', name: 'Administrador', email: 'teste@teste.com.br' };
+let currentUser = { type: 'admin', name: 'Laleska', email: 'laleska' };
 let agendaMonth = new Date(2026, 6, 1);
 let selectedAgendaDate = '2026-07-15';
 const save = () => {
@@ -162,8 +164,12 @@ document.querySelector('#login-form').addEventListener('submit', event => {
   const error = document.querySelector('#login-error');
   error.textContent = '';
   const employee = data.employees.find(item => item.email.toLowerCase() === email && item.password === password);
-  if (loginType === 'admin' && email === 'teste@teste.com.br' && password === '123456') {
-    currentUser = { type: 'admin', name: 'Administrador', email };
+  const personalEmployee = data.employees.find(item => item.email === 'funcionario@rracademia.com') || data.employees[0];
+  if (loginType === 'admin' && email === 'laleska' && password === '12345') {
+    currentUser = { type: 'admin', name: 'Laleska', email };
+    prepareUserAccess(); showScreen('welcome');
+  } else if (loginType === 'employee' && email === 'personal' && password === '112233') {
+    currentUser = { type: 'employee', name: 'Personal', email, id: personalEmployee?.id };
     prepareUserAccess(); showScreen('welcome');
   } else if (loginType === 'employee' && employee) {
     currentUser = { type: 'employee', name: employee.name, email: employee.email, id: employee.id };
