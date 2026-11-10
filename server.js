@@ -86,5 +86,5 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`Academia Shape Combat disponível em http://${host}:${port}`);
+  console.log(`Sistema de Aluguéis disponível em http://${host}:${port}`);
 });

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Academia Shape Combat - gerenciamento inteligente">
-  <title>Academia Shape Combat | Gestão</title>
+  <meta name="description" content="Sistema de Aluguéis - gestão de imóveis e locações">
+  <title>Sistema de Aluguéis | Gestão</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -13,39 +13,39 @@
 </head>
 <body>
   <div id="app">
-    <section id="splash" class="screen splash active" aria-label="Carregando FitCore">
+    <section id="splash" class="screen splash active" aria-label="Carregando Sistema de Aluguéis">
       <div class="splash-glow"></div>
-      <img class="brand-logo brand-logo--large" src="academia1.jpg" alt="Logo Academia Shape Combat">
-      <div class="brand-name">SHAPE <span>COMBAT</span></div>
-      <p>FORÇA • FOCO • RESULTADO</p>
+      <div class="rental-brand-mark rental-brand-mark--large" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 14.5 16 5l12 9.5M7.5 13v14h17V13M13 27v-8h6v8M22 8V5h4v6"/><circle cx="23" cy="17" r="2"/></svg></div>
+      <div class="rental-brand-name">SISTEMA <span>DE ALUGUÉIS</span></div>
+      <p>IMÓVEIS • CONTRATOS • LOCAÇÕES</p>
       <div class="loader"><span></span></div>
     </section>
 
     <section id="login" class="screen auth-screen" aria-label="Login">
       <div class="auth-art">
         <div class="auth-brand">
-          <img class="brand-logo" src="academia1.jpg" alt="Logo Academia Shape Combat">
-          <div class="brand-name">SHAPE <span>COMBAT</span></div>
+          <div class="rental-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 14.5 16 5l12 9.5M7.5 13v14h17V13M13 27v-8h6v8M22 8V5h4v6"/><circle cx="23" cy="17" r="2"/></svg></div>
+          <div class="rental-brand-name">SISTEMA <span>DE ALUGUÉIS</span></div>
         </div>
         <div class="art-copy">
-          <span class="eyebrow">GESTÃO QUE IMPULSIONA</span>
-          <h1>Mais controle.<br><em>Mais resultados.</em></h1>
-          <p>Tudo o que sua academia precisa para crescer, em um só lugar.</p>
+          <span class="eyebrow">GESTÃO IMOBILIÁRIA SIMPLES</span>
+          <h1>Mais controle.<br><em>Locações tranquilas.</em></h1>
+          <p>Organize seus imóveis, contratos e recebimentos em um só lugar.</p>
         </div>
-        <div class="art-stat"><strong>+32%</strong><span>de eficiência na gestão</span></div>
+        <div class="art-stat"><strong>360°</strong><span>de visão sobre suas locações</span></div>
       </div>
       <main class="auth-panel">
-        <div class="mobile-brand"><img class="brand-logo" src="academia1.jpg" alt="Logo Academia Shape Combat"><div class="brand-name">SHAPE <span>COMBAT</span></div></div>
+        <div class="mobile-brand"><div class="rental-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 14.5 16 5l12 9.5M7.5 13v14h17V13M13 27v-8h6v8M22 8V5h4v6"/><circle cx="23" cy="17" r="2"/></svg></div><div class="rental-brand-name">SISTEMA <span>DE ALUGUÉIS</span></div></div>
         <div class="form-wrap">
-          <span class="eyebrow dark">ACESSO ADMINISTRATIVO</span>
-          <h2>Bem-vindo de volta</h2>
-          <p class="form-intro">Entre com suas credenciais para continuar.</p>
+          <span class="eyebrow dark">ÁREA DO LOCADOR</span>
+          <h2>Acesse sua conta</h2>
+          <p class="form-intro">Entre para acompanhar seus imóveis e contratos.</p>
           <form id="login-form" novalidate>
             <div class="login-type" role="group" aria-label="Tipo de acesso"><button type="button" class="active" data-login-type="admin">Administrador</button><button type="button" data-login-type="employee">Funcionário</button></div>
-            <label for="email">Login</label>
+            <label for="email">E-mail ou usuário</label>
             <div class="input-wrap">
               <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 7l8 6 8-6"/></svg>
-              <input id="email" type="text" placeholder="Digite seu login" autocomplete="username" required>
+              <input id="email" type="text" placeholder="Digite seu e-mail ou usuário" autocomplete="username" required>
             </div>
             <div class="label-row"><label for="password">Senha</label><button type="button" class="text-button" id="forgot-button">Esqueceu a senha?</button></div>
             <div class="input-wrap">
@@ -57,7 +57,7 @@
             <button class="primary-button" type="submit">Entrar <span>→</span></button>
           </form>
         </div>
-        <p class="copyright">© 2026 Academia Shape Combat. Todos os direitos reservados.</p>
+        <p class="copyright">© 2026 Sistema de Aluguéis. Todos os direitos reservados.</p>
       </main>
     </section>
 

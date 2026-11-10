@@ -1,8 +1,8 @@
 {
-  "name": "rr-gerenciamento-academia",
+  "name": "sistema-de-alugueis",
   "version": "1.0.0",
   "private": true,
-  "description": "Protótipo local do sistema de gerenciamento RR Academia",
+  "description": "Sistema de gestão de imóveis e aluguéis",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
