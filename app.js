@@ -93,7 +93,7 @@ if (!data.employees.some(employee => employee.email === 'funcionario@rracademia.
     hasChildren: false,
     childrenCount: 0,
     email: 'funcionario@rracademia.com',
-    password: 'func123'
+    password: ''
   });
   localStorage.setItem('rr-academia-data', JSON.stringify(data));
 }
@@ -114,6 +114,7 @@ data.payrollHistory[payrollMonthKey] = data.employees.filter(employee => employe
 const demoEmployee = data.employees.find(employee => employee.email === 'funcionario@rracademia.com');
 if (demoEmployee) { demoEmployee.entryTime = '06:00'; demoEmployee.exitTime = '16:00'; }
 if (!data.settings.latitude) data.settings = { ...data.settings, latitude: '-23.550520', longitude: '-46.633308', allowedRadius: '200' };
+data.employees.forEach(employee => { delete employee.password; });
 localStorage.setItem('rr-academia-data', JSON.stringify(data));
 if (!data.schedules) {
   data.schedules = [
@@ -132,16 +133,16 @@ if (!data.notifications) {
 }
 let currentView = 'overview';
 let loginType = 'admin';
-let currentUser = { type: 'admin', name: 'Laleska', email: 'laleska' };
+let currentUser = null;
 let agendaMonth = new Date(2026, 6, 1);
 let selectedAgendaDate = '2026-07-15';
 const save = () => {
   localStorage.setItem('rr-academia-data', JSON.stringify(data));
-  fetch('/api/notifications', {
+  if (currentUser?.type === 'admin') fetch('/api/notifications', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data.notifications || [])
-  }).catch(() => showToast('Dados salvos. A sincronização com o app dos alunos ficará pendente.'));
+  }).then(response => { if (!response.ok) throw new Error('Falha ao sincronizar'); }).catch(() => showToast('Dados salvos. A sincronização com o app dos alunos ficará pendente.'));
   updateBadges();
 };
 const updateBadges = () => {
@@ -157,24 +158,24 @@ const updateBadges = () => {
 const showScreen = id => { screens.forEach(screen => screen.classList.toggle('active', screen.id === id)); window.scrollTo(0, 0); };
 setTimeout(() => showScreen('login'), 1900);
 
-document.querySelector('#login-form').addEventListener('submit', event => {
+async function api(url, payload) {
+  const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'Falha na solicitação.');
+  return result;
+}
+document.querySelector('#login-form').addEventListener('submit', async event => {
   event.preventDefault();
-  const email = document.querySelector('#email').value.trim().toLowerCase();
-  const password = document.querySelector('#password').value;
   const error = document.querySelector('#login-error');
+  const button = event.currentTarget.querySelector('[type="submit"]');
   error.textContent = '';
-  const employee = data.employees.find(item => item.email.toLowerCase() === email && item.password === password);
-  const personalEmployee = data.employees.find(item => item.email === 'funcionario@rracademia.com') || data.employees[0];
-  if (loginType === 'admin' && email === 'laleska' && password === '12345') {
-    currentUser = { type: 'admin', name: 'Laleska', email };
+  button.disabled = true;
+  try {
+    currentUser = await api('/api/login', { email: document.querySelector('#email').value.trim(), password: document.querySelector('#password').value, type: loginType });
+    document.querySelector('#password').value = '';
     prepareUserAccess(); showScreen('welcome');
-  } else if (loginType === 'employee' && email === 'personal' && password === '112233') {
-    currentUser = { type: 'employee', name: 'Personal', email, id: personalEmployee?.id };
-    prepareUserAccess(); showScreen('welcome');
-  } else if (loginType === 'employee' && employee) {
-    currentUser = { type: 'employee', name: employee.name, email: employee.email, id: employee.id };
-    prepareUserAccess(); showScreen('welcome');
-  } else error.textContent = 'E-mail ou senha incorretos para este tipo de acesso.';
+  } catch (failure) { error.textContent = failure.message; }
+  finally { button.disabled = false; }
 });
 document.querySelectorAll('[data-login-type]').forEach(button => button.addEventListener('click', () => {
   loginType = button.dataset.loginType;
@@ -204,7 +205,7 @@ document.querySelector('#toggle-password').addEventListener('click', event => {
 const forgotModal = document.querySelector('#forgot-modal');
 document.querySelector('#forgot-button').addEventListener('click', () => { document.querySelector('#forgot-step').hidden = false; document.querySelector('#sent-step').hidden = true; document.querySelector('#recovery-email').value = document.querySelector('#email').value; forgotModal.showModal(); });
 document.querySelector('#modal-close').addEventListener('click', () => forgotModal.close());
-document.querySelector('#forgot-form').addEventListener('submit', event => { event.preventDefault(); const email = document.querySelector('#recovery-email').value.trim(); if (!email) return; document.querySelector('#sent-email').textContent = email; document.querySelector('#forgot-step').hidden = true; document.querySelector('#sent-step').hidden = false; });
+document.querySelector('#forgot-form').addEventListener('submit', event => { event.preventDefault(); showToast('Solicite ao administrador a redefinição da senha.'); });
 document.querySelector('#back-login').addEventListener('click', () => forgotModal.close());
 
 document.querySelector('#continue-button').addEventListener('click', () => { showScreen('dashboard'); renderView('overview'); });
@@ -212,7 +213,9 @@ function openLogoutConfirmation() {
   systemModal.innerHTML = `<button class="modal-close" data-cancel-logout aria-label="Fechar">×</button><div class="logout-modal-content"><div class="logout-modal-icon">↪</div><span class="eyebrow dark">ENCERRAR SESSÃO</span><h2>Deseja mesmo sair?</h2><p>Você precisará informar seu e-mail e senha novamente para acessar o sistema.</p><div class="logout-modal-actions"><button class="logout-cancel-button" type="button" data-cancel-logout>Cancelar</button><button class="logout-confirm-button" type="button" id="confirm-logout">Sim, sair</button></div></div>`;
   systemModal.showModal();
   systemModal.querySelectorAll('[data-cancel-logout]').forEach(button => button.addEventListener('click', () => systemModal.close()));
-  systemModal.querySelector('#confirm-logout').addEventListener('click', () => {
+  systemModal.querySelector('#confirm-logout').addEventListener('click', async () => {
+    try { await api('/api/logout', {}); } catch { showToast('N?o foi poss?vel sair. Tente novamente.'); return; }
+    currentUser = null;
     document.querySelector('#password').value = '';
     document.querySelector('#login-error').textContent = '';
     document.querySelector('.sidebar').classList.remove('open');
@@ -385,7 +388,7 @@ function openEmployeeModal(id = null) {
     <label>Turno<select name="shift" id="employee-shift"><option value="morning" ${employee?.entryTime !== '16:00' ? 'selected' : ''}>06:00 às 16:00</option><option value="evening" ${employee?.entryTime === '16:00' ? 'selected' : ''}>16:00 às 23:00</option></select></label><input name="entryTime" id="employee-entry-time" type="hidden" value="${employee?.entryTime || '06:00'}"><input name="exitTime" id="employee-exit-time" type="hidden" value="${employee?.exitTime || '16:00'}"><label>Tamanho da blusa<select name="shirtSize">${['PP', 'P', 'M', 'G', 'GG', 'XGG'].map(value => `<option ${employee?.shirtSize === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label><label>Salário<input name="salary" type="number" min="0" step="0.01" required value="${employee?.salary || ''}"></label>
     <label>Telefone<input name="phone" required value="${escapeHtml(employee?.phone)}"></label><label>URL da foto<input name="photo" type="url" value="${escapeHtml(employee?.photo)}" placeholder="https://..."></label><label class="full">Endereço<input name="address" required value="${escapeHtml(employee?.address)}"></label>
     <label>Possui filhos?<select name="hasChildren" id="employee-has-children"><option value="no" ${!employee?.hasChildren ? 'selected' : ''}>Não</option><option value="yes" ${employee?.hasChildren ? 'selected' : ''}>Sim</option></select></label><label>Quantidade de filhos<input name="childrenCount" id="employee-children-count" type="number" min="0" value="${employee?.childrenCount || 0}" ${employee?.hasChildren ? '' : 'disabled'}></label>
-    <div class="form-subtitle full"><strong>Dados de acesso</strong><small>Use este e-mail e senha na opção “Funcionário” da tela de login.</small></div><label>E-mail de acesso<input name="email" type="email" required value="${escapeHtml(employee?.email)}"></label><label>Senha<input name="password" type="text" minlength="4" required value="${escapeHtml(employee?.password)}"></label>
+    <div class="form-subtitle full"><strong>Dados de acesso</strong><small>Use este e-mail e senha na opção “Funcionário” da tela de login.</small></div><label>E-mail de acesso<input name="email" type="email" required value="${escapeHtml(employee?.email)}"></label><label>Senha<input name="password" type="password" minlength="8" ${employee ? 'placeholder="Deixe vazio para manter a senha"' : 'required'} autocomplete="new-password"></label>
     ${employee ? `<label class="switch-field full"><input name="active" type="checkbox" ${employee.active !== false ? 'checked' : ''}> Funcionário ativo</label>` : ''}</div><button class="primary-button" type="submit">${employee ? 'Salvar alterações' : 'Cadastrar funcionário'}</button></form>`;
   systemModal.showModal();
   bindPhotoPicker('employee');
@@ -393,13 +396,15 @@ function openEmployeeModal(id = null) {
   systemModal.querySelector('[data-close-modal]').addEventListener('click', () => systemModal.close());
   document.querySelector('#employee-has-children').addEventListener('change', event => { const input = document.querySelector('#employee-children-count'); input.disabled = event.target.value !== 'yes'; if (input.disabled) input.value = 0; });
   document.querySelector('#employee-shift').addEventListener('change', event => { const morning = event.target.value === 'morning'; document.querySelector('#employee-entry-time').value = morning ? '06:00' : '16:00'; document.querySelector('#employee-exit-time').value = morning ? '16:00' : '23:00'; });
-  document.querySelector('#employee-form').addEventListener('submit', event => {
+  document.querySelector('#employee-form').addEventListener('submit', async event => {
     event.preventDefault();
     const values = Object.fromEntries(new FormData(event.currentTarget));
     values.photo = document.querySelector('#employee-photo-value').value;
     const duplicate = data.employees.find(item => item.email.toLowerCase() === values.email.trim().toLowerCase() && item.id !== employee?.id);
     if (duplicate) { showToast('Já existe um funcionário com este e-mail.'); return; }
     const record = { id: employee?.id || crypto.randomUUID(), ...values, name: values.name.trim(), email: values.email.trim().toLowerCase(), salary: Number(values.salary), active: employee ? values.active === 'on' : true, hasChildren: values.hasChildren === 'yes', childrenCount: values.hasChildren === 'yes' ? Number(values.childrenCount || 0) : 0 };
+    try { await api('/api/employees', record); } catch (failure) { showToast(failure.message); return; }
+    delete record.password;
     if (employee) Object.assign(employee, record); else data.employees.unshift(record);
     save(); systemModal.close(); renderEmployees(); showToast(employee ? 'Funcionário atualizado.' : 'Funcionário cadastrado.');
   });
